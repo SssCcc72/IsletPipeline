@@ -14,9 +14,9 @@ else
 end
 iend = read_num;
 for i =istart:iend
-    tif_raw(:,:,i) =double(imread(tif_path,i));
+    tif_raw(:,:,i) =single(imread(tif_path,i));
     if strcmp('adjust',adjust)
-        tif_ad(:,:,i) = double(imadjust(tif_raw(:,:,i)));
+        tif_ad(:,:,i) = single(imadjust(tif_raw(:,:,i)));
     else
         tif_ad(:,:,i) = tif_raw(:,:,i);
     end
