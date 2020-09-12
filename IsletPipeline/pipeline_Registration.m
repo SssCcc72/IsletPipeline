@@ -43,10 +43,19 @@ for i = 3 :length(fileDir)
         disp(subfile(j).name);
         subTiff = [subfile(j).folder,'\',subfile(j).name];
         info = imfinfo(subTiff);
+        Width = info(1).Width;
+        Height = info(1).Height;
         frames = size(info,1);
+        im_tif_3D = zeros(Width,Height,frames);
+        im_tif_ad = zeros(Width,Height,frames);
+        Y         = zeros(Width,Height,frames);
         %% 配准（刚性+非刚性）
-        [im_tif_3D,im_tif_ad] = im_tif_read(subTiff,'adjust',frames,0);
-        Y = img_corr_fun(im_tif_3D,im_tif_ad,frames);
+        [im_tif_3D,im_tif_ad] = im_tif_read(subTiff,'adjust',frames,0,im_tif_3D,im_tif_ad);
+        n=frames;
+        parfor ii = 2:n
+            [dx,dy,zero_mark] = im_corr(im_tif_ad(:,:,1),im_tif_ad(:,:,ii));
+            Y(:,:,ii) = im_move(im_tif_3D(:,:,ii),dx,dy);
+        end
         if (rigW == 1)
             write_tif_uint16(Y,subfile(j).folder,[subfile(j).name(1:end-4),'_Cor']);
         end

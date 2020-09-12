@@ -1,4 +1,4 @@
-function [tif_raw,tif_ad] = im_tif_read(tifname,adjust,read_num,off_set)
+function [tif_raw,tif_ad] = im_tif_read(tifname,adjust,read_num,off_set,tif_raw,tif_ad)
 %IM_TIF_READ 此处显示有关此函数的摘要
 %   此处显示详细说明
 h=waitbar(0,'Reading Image, Please wait...');

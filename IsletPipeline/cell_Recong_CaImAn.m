@@ -118,6 +118,6 @@ figure;
 %% display components
 
 plot_components_GUI(Yr,A_or,C_or,b2,f2,Cn,options);
-
+save([roi_Path,'\',roi_Name(1:end-4),'Coor.mat'],'Coor');
 
 CoorToROI;
