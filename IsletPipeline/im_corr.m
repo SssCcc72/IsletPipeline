@@ -1,6 +1,10 @@
-function [dx,dy,zero_mark] = im_corr(im1,im2)
+function [dx,dy,zero_mark] = im_corr(im1,im2,adjust)
 %IM_CORR 此处显示有关此函数的摘要
 %   此处显示详细说明
+if(strcmp(adjust,'adjust'))
+       im1 = imadjust(im1);
+       im2 = imadjust(im2);
+end
 im1_fft = fft2(im1);
 im2_fft = fft2(im2);
 im_corr = ifft2(im1_fft.*conj(im2_fft));

@@ -4,7 +4,7 @@ gcp;
 addpath('CaImAn-MATLAB');
 addpath('NoRMCorre');
 %% path 是需要修改的地方
-path = 'F:\Master\17.0-组会';
+path = 'D:\Image\1.0-胰岛数据';
 
 %% 数据读写参数
 rigW = 0; % 0为不存储刚性配准结果，1表示存储刚性配准结果
@@ -46,15 +46,17 @@ for i = 3 :length(fileDir)
         Width = info(1).Width;
         Height = info(1).Height;
         frames = size(info,1);
-        im_tif_3D = zeros(Width,Height,frames);
-        im_tif_ad = zeros(Width,Height,frames);
+%         im_tif_3D = zeros(Width,Height,frames);
+%         im_tif_ad = zeros(Width,Height,frames);
         Y         = zeros(Width,Height,frames);
         %% 配准（刚性+非刚性）
-        [im_tif_3D,im_tif_ad] = im_tif_read(subTiff,'adjust',frames,0,im_tif_3D,im_tif_ad);
+        [Y] = im_tif_read(subTiff,frames,0,Y);
+        Y = Y - min(min(min(Y)));
         n=frames;
+        InitY = Y(:,:,1);   % 不能直接把Y（:,:,1）放到其中，会报错
         parfor ii = 2:n
-            [dx,dy,zero_mark] = im_corr(im_tif_ad(:,:,1),im_tif_ad(:,:,ii));
-            Y(:,:,ii) = im_move(im_tif_3D(:,:,ii),dx,dy);
+            [dx,dy,zero_mark] = im_corr(InitY,Y(:,:,ii),'Noadjust');
+            Y(:,:,ii) = im_move(Y(:,:,ii),dx,dy);
         end
         if (rigW == 1)
             write_tif_uint16(Y,subfile(j).folder,[subfile(j).name(1:end-4),'_Cor']);
