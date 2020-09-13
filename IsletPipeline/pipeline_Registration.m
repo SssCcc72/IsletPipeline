@@ -70,12 +70,12 @@ for i = 3 :length(fileDir)
         Y = Y - min(Y(:));
             %% now try non-rigid motion correction (also in parallel)
         options_nonrigid = NoRMCorreSetParms('d1',size(Y,1),'d2',size(Y,2),'grid_size',grid_size,'mot_uf',mot_uf,'bin_width',bin_width,'max_shift',max_shift,'max_dev',max_dev,'us_fac',us_fac,'init_batch',init_batch,'iter',iter);
-        tic; [M2,shifts2,template2,options_nonrigid] = normcorre_batch(Y,options_nonrigid); toc
-        write_stack(uint16(M2),subfile(j).folder,[subfile(j).name(1:end-4),'-NoRMC'],16); 
+        tic; [Y,shifts2,template2,options_nonrigid] = normcorre_batch(Y,options_nonrigid); toc
+        write_stack(uint16(Y),subfile(j).folder,[subfile(j).name(1:end-4),'-NoRMC'],16); 
        
         %% Ï¸°ûÊ¶±ð
         if(cRongR == 1)
-            Y = M2;
+%             Y = Y;
             roi_Name = subfile(j).name(1:end-4);
             roi_Path = subfile(j).folder;
             cell_Recong_CaImAn;
