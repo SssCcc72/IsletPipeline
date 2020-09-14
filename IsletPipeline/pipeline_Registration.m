@@ -54,10 +54,12 @@ for i = 3 :length(fileDir)
         Y = Y - min(min(min(Y)));
         n=frames;
         InitY = Y(:,:,1);   % 不能直接把Y（:,:,1）放到其中，会报错
+        disp('Registration img,please wait......');
         parfor ii = 2:n
             [dx,dy,zero_mark] = im_corr(InitY,Y(:,:,ii),'adjust');
             Y(:,:,ii) = im_move(Y(:,:,ii),dx,dy);
         end
+        disp('Registration img done');
         if (rigW == 1)
             write_tif_uint16(Y,subfile(j).folder,[subfile(j).name(1:end-4),'_Cor']);
         end
