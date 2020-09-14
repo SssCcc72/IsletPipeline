@@ -48,14 +48,14 @@ for i = 3 :length(fileDir)
         frames = size(info,1);
 %         im_tif_3D = zeros(Width,Height,frames);
 %         im_tif_ad = zeros(Width,Height,frames);
-        Y         = zeros(Width,Height,frames);
+        Y         = single(zeros(Width,Height,frames));
         %% 配准（刚性+非刚性）
         [Y] = im_tif_read(subTiff,frames,0,Y);
         Y = Y - min(min(min(Y)));
         n=frames;
         InitY = Y(:,:,1);   % 不能直接把Y（:,:,1）放到其中，会报错
         parfor ii = 2:n
-            [dx,dy,zero_mark] = im_corr(InitY,Y(:,:,ii),'Noadjust');
+            [dx,dy,zero_mark] = im_corr(InitY,Y(:,:,ii),'adjust');
             Y(:,:,ii) = im_move(Y(:,:,ii),dx,dy);
         end
         if (rigW == 1)
@@ -72,7 +72,7 @@ for i = 3 :length(fileDir)
         options_nonrigid = NoRMCorreSetParms('d1',size(Y,1),'d2',size(Y,2),'grid_size',grid_size,'mot_uf',mot_uf,'bin_width',bin_width,'max_shift',max_shift,'max_dev',max_dev,'us_fac',us_fac,'init_batch',init_batch,'iter',iter);
         tic; [Y,shifts2,template2,options_nonrigid] = normcorre_batch(Y,options_nonrigid); toc
         write_stack(uint16(Y),subfile(j).folder,[subfile(j).name(1:end-4),'-NoRMC'],16); 
-       
+       histeq
         %% 细胞识别
         if(cRongR == 1)
 %             Y = Y;
